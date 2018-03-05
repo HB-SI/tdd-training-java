@@ -6,40 +6,14 @@ import org.junit.Test;
 
 public class GildedRoseTest {
     @Test
-    public void should_item_filled() {
-
-        Item item = new Item("test", 1, 0);
-        assertEquals(1, item.sellIn);
-    }
-
-    @Test
-    public void should_item_quality() {
-        Item item = new Item("testQ", 1, 2);
-        assertEquals(2, item.quality);
-    }
-
-    @Test
     public void should_item_update_sellin() {
-        Item[] items = new Item[] {
-            new Item("foo", 2, 0)
-        };
-        GildedRose app = new GildedRose(items);
+        assertFoo(2,0,0,1);
 
-        app.updateQuality();
-
-        assertEquals(1, app.items[0].sellIn);
     }
 
     @Test
     public void should_item_update_quality() {
-        Item[] items = new Item[] {
-            new Item("foo", 2, 2)
-        };
-        GildedRose app = new GildedRose(items);
-
-        app.updateQuality();
-
-        assertEquals(1, app.items[0].quality);
+        assertFoo(2,2,1,1);
     }
 
     @Test
@@ -73,6 +47,16 @@ public class GildedRoseTest {
     }
 
     @Test
+    public void shouldnt_quality_more_than_fifty_and_only_adds_one_quality() {
+        assertAgedBrie(0,49,50,-1);
+    }
+
+    @Test
+    public void shouldnt_quality_more_than_fifty_and_only_adds_one_quality_when_expired() {
+        assertAgedBrie(-1,47,49,-2);
+    }
+
+    @Test
     public void shouldnt_sulfuras_quality_update() {
         assertSulfuras(2,34,34,2);
     }
@@ -83,8 +67,18 @@ public class GildedRoseTest {
     }
 
     @Test
+    public void should_increase_quality_on_sellin_when_sellin_is_ten() {
+        assertBackstage(10, 34, 36, 9);
+    }
+
+    @Test
     public void should_increase_quality_on_sellin_when_shellin_minor_ten() {
         assertBackstage(7, 34, 36, 6);
+    }
+
+    @Test
+    public void should_increase_quality_on_sellin_when_shellin_equals_five() {
+        assertBackstage(5, 34, 37, 4);
     }
 
     @Test
@@ -95,6 +89,11 @@ public class GildedRoseTest {
     @Test
     public void should_drop_quality_on_sellin_over_date() {
         assertBackstage(0, 45, 0, -1);
+    }
+
+    @Test
+    public void should_drop_quality_on_sellin_over_date_and_sellin_is_negative() {
+        assertBackstage(-1, 45, 0, -2);
     }
 
     private void assertFoo(int sellIn, int initialQuality, int expectedQuality, int expectedSellIn) {
